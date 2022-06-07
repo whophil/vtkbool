@@ -95,7 +95,8 @@ else()
                 MODULES ${modules}
                 PYTHON_PACKAGE "vtkbool"
                 BUILD_STATIC OFF
-                INSTALL_HEADERS OFF)
+                INSTALL_HEADERS OFF
+                MODULE_DESTINATION "${VTK_PYTHON_SITE_PACKAGES_SUFFIX}")
 
             if (VTKBOOL_TESTING)
                 include(CTest)
