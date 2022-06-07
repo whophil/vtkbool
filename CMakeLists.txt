@@ -32,7 +32,6 @@ endif()
 option(VTKBOOL_PARAVIEW "" OFF)
 option(VTKBOOL_DEBUG "" OFF)
 option(VTKBOOL_COVERAGE "" OFF)
-option(VTKBOOL_TESTING "" OFF)
 
 mark_as_advanced(VTKBOOL_DEBUG)
 mark_as_advanced(VTKBOOL_COVERAGE)
@@ -98,40 +97,38 @@ else()
                 INSTALL_HEADERS OFF
                 MODULE_DESTINATION "${VTK_PYTHON_SITE_PACKAGES_SUFFIX}")
 
-            if (VTKBOOL_TESTING)
-                include(CTest)
+            include(CTest)
 
-                set(testenv "PYTHONPATH=${VTK_BUILD_PYTHON_MODULES_DIR}/vtkbool")
+            set(testenv "PYTHONPATH=${VTK_BUILD_PYTHON_MODULES_DIR}/vtkbool")
 
-                add_test(NAME "import_vtkbool"
-                    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/testing/test_python.py)
+            add_test(NAME "import_vtkbool"
+                COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/testing/test_python.py)
 
-                set_property(TEST "import_vtkbool" APPEND PROPERTY ENVIRONMENT "${testenv}")
+            set_property(TEST "import_vtkbool" APPEND PROPERTY ENVIRONMENT "${testenv}")
 
-                add_test(NAME "generate_frieze"
-                    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/testing/generate_frieze.py
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/testing)
+            add_test(NAME "generate_frieze"
+                COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/testing/generate_frieze.py
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/testing)
 
-                set_property(TEST "generate_frieze" APPEND PROPERTY ENVIRONMENT "${testenv}")
+            set_property(TEST "generate_frieze" APPEND PROPERTY ENVIRONMENT "${testenv}")
 
-                add_test(NAME "test_filter"
-                    COMMAND ${Python3_EXECUTABLE} -m pytest
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/testing)
+            add_test(NAME "test_filter"
+                COMMAND ${Python3_EXECUTABLE} -m pytest
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/testing)
 
-                set_property(TEST "test_filter" APPEND PROPERTY ENVIRONMENT "${testenv}")
+            set_property(TEST "test_filter" APPEND PROPERTY ENVIRONMENT "${testenv}")
 
-                add_executable(test_merger testing/test_merger.cxx)
-                target_link_libraries(test_merger PRIVATE vtkBool ${VTK_LIBRARIES})
+            add_executable(test_merger testing/test_merger.cxx)
+            target_link_libraries(test_merger PRIVATE vtkBool ${VTK_LIBRARIES})
 
-                vtk_module_autoinit(
-                    TARGETS test_merger
-                    MODULES ${VTK_LIBRARIES}
-                )
+            vtk_module_autoinit(
+                TARGETS test_merger
+                MODULES ${VTK_LIBRARIES}
+            )
 
-                add_test(NAME "test_merger"
-                    COMMAND test_merger
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/testing)
-            endif ()
+            add_test(NAME "test_merger"
+                COMMAND test_merger
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/testing)
 
         endif()
 
